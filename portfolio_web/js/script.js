@@ -61,16 +61,31 @@ function videoToFrames() {
 //
 function setup() {
   console.log("setup");
-  display();
+  animationDisplay();
 }
 
-/*****************************/
-function display() {
-  animationFrames.forEach(function(frame) {
-    var canvas = document.createElement('canvas');
-    canvas.width = frame.width;
-    canvas.height = frame.height;
-    canvas.getContext('2d').putImageData(frame, 0, 0);
-    document.getElementsByTagName('body')[0].appendChild(canvas);
-  });
+// animationDisplay
+//
+// Display the image from the animationFrames array from bottom to top
+function animationDisplay() {
+  // Define the width according to the first frame (same size for all)
+  let animationWidth = animationFrames[0].width;
+  let animationHeight = animationFrames[0].height;
+  // Create canvases to append the images to the animation div
+  // Do a reverse loop so that the first frame is on top
+  for (let i = animationFrames.length - 1; i >= 0; i--) {
+    //**The video-to-frames library requires DOM function to transfer imageData into 2D canvases
+    let canvas = document.createElement('canvas');
+    canvas.width = animationWidth;
+    canvas.height = animationHeight;
+    canvas.getContext('2d').putImageData(animationFrames[i], 0, 0);
+    $('#animation').append(canvas);
+  };
+  // Add a class to the canvas elements
+  $('canvas').addClass('frames');
+  // Adjust the size of the animation div
+  $('#animation').css({
+    width: animationWidth,
+    height: animationHeight
+  })
 }
