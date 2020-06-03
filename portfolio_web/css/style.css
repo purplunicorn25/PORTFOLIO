@@ -8,10 +8,23 @@ body {
   position: absolute;
   left: 20%;
   bottom: 0;
+  z-index: 0;
 }
 
 .frames {
   position: absolute;
   left: 0;
   top: 0;
+}
+
+#one {
+  position: absolute;
+  left: 300px;
+  top: 50px;
+  font-size: 40px;
+}
+
+svg {
+  position: absolute;
+  z-index: 1;
 }

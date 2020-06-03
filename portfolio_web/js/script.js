@@ -62,6 +62,7 @@ function videoToFrames() {
 function setup() {
   console.log("setup");
   animationDisplay();
+  animate();
 }
 
 // animationDisplay
@@ -88,4 +89,65 @@ function animationDisplay() {
     width: animationWidth,
     height: animationHeight
   })
+}
+
+// animate
+//
+//
+function animate() {
+  // Get the center of the element and the animation
+  let one = getCenter('one');
+  let animation = getCenter('animation');
+  // Define the distance between the two centers
+  let distance = Math.hypot(animation.x - one.x, animation.y - one.y);
+  // Define the radius of the selectable
+  let radius = distance / 2;
+  // Define the steps
+  let treshold = radius / NUM_FRAMES;
+
+
+  // Get the distance between the mouse and the element
+  let d;
+  // Check the distance whenever the mouse is moved
+  window.addEventListener('mousemove', (event) => {
+    // Get the distance qith the hypotenuse
+    d = Math.hypot(event.clientX - one.x, event.clientY - one.y);
+    //
+    for (let i = 0; i < NUM_FRAMES; i++) {}
+
+    if (d < 50) {
+      console.log('true');
+    } else {
+      console.log('false');
+    }
+  });
+
+
+
+
+
+  $('body').append(`<svg height="1000" width="1500"><line id="line" x1='${one.x}' y1='${one.y}' x2='${animation.x}' y2='${animation.y}' style="stroke:rgb(255,0,0);stroke-width:3"/></svg>`);
+}
+
+//
+//
+//
+function getMousePosition() {
+  window.addEventListener('mousemove', (event) => {
+    console.log(`x: ${event.x} y: ${event.y}`);
+  });
+}
+
+// getCenter
+//
+//
+function getCenter(elementId) {
+  let element = document.getElementById(elementId);
+  let elementRect = element.getBoundingClientRect();
+  let centerX = (elementRect.right + elementRect.left) / 2;
+  let centerY = (elementRect.bottom + elementRect.top) / 2;
+  return {
+    x: centerX,
+    y: centerY
+  }
 }
