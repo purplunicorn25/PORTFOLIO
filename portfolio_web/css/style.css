@@ -15,6 +15,7 @@ body {
   position: absolute;
   left: 0;
   top: 0;
+  visibility: visible;
 }
 
 #one {

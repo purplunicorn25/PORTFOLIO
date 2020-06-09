@@ -76,9 +76,11 @@ function animationDisplay() {
   // Do a reverse loop so that the first frame is on top
   for (let i = animationFrames.length - 1; i >= 0; i--) {
     //**The video-to-frames library requires DOM function to transfer imageData into 2D canvases
+    // Create a canvas, define its width, height and ID. Append to div.
     let canvas = document.createElement('canvas');
     canvas.width = animationWidth;
     canvas.height = animationHeight;
+    canvas.id = 'frame' + i;
     canvas.getContext('2d').putImageData(animationFrames[i], 0, 0);
     $('#animation').append(canvas);
   };
@@ -88,7 +90,7 @@ function animationDisplay() {
   $('#animation').css({
     width: animationWidth,
     height: animationHeight
-  })
+  });
 }
 
 // animate
@@ -105,36 +107,22 @@ function animate() {
   // Define the steps
   let treshold = radius / NUM_FRAMES;
 
-
+  $('body').append(`<svg height="1000" width="1500"><line id="line" x1='${one.x}' y1='${one.y}' x2='${animation.x}' y2='${animation.y}' style="stroke:rgb(255,0,0);stroke-width:3"/></svg>`);
   // Get the distance between the mouse and the element
   let d;
   // Check the distance whenever the mouse is moved
   window.addEventListener('mousemove', (event) => {
-    // Get the distance qith the hypotenuse
+    // Get the distance with the hypotenuse
     d = Math.hypot(event.clientX - one.x, event.clientY - one.y);
-    //
-    for (let i = 0; i < NUM_FRAMES; i++) {}
-
-    if (d < 50) {
-      console.log('true');
-    } else {
-      console.log('false');
+    // Check the distance according to the tresholds
+    for (let i = 0; i < NUM_FRAMES; i++) {
+      if (d < treshold * (i + 1)) {
+        console.log('visible' + i);
+        break;
+      } else if (d > treshold * NUM_FRAMES) {
+        console.log('invisible');
+      }
     }
-  });
-
-
-
-
-
-  $('body').append(`<svg height="1000" width="1500"><line id="line" x1='${one.x}' y1='${one.y}' x2='${animation.x}' y2='${animation.y}' style="stroke:rgb(255,0,0);stroke-width:3"/></svg>`);
-}
-
-//
-//
-//
-function getMousePosition() {
-  window.addEventListener('mousemove', (event) => {
-    console.log(`x: ${event.x} y: ${event.y}`);
   });
 }
 
