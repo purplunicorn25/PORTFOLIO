@@ -15,17 +15,21 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  visibility: visible;
+  visibility: hidden;
 }
 
 #one {
-  position: absolute;
   left: 300px;
   top: 50px;
-  font-size: 40px;
 }
 
-svg {
+#two {
+  right: 250px;
+  top: 200px;
+}
+
+.number {
   position: absolute;
-  z-index: 1;
+  font-size: 60px;
+  margin: 0px;
 }

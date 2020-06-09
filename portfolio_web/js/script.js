@@ -73,8 +73,8 @@ function animationDisplay() {
   let animationWidth = animationFrames[0].width;
   let animationHeight = animationFrames[0].height;
   // Create canvases to append the images to the animation div
-  // Do a reverse loop so that the first frame is on top
-  for (let i = animationFrames.length - 1; i >= 0; i--) {
+  // for (let i = animationFrames.length - 1; i >= 0; i--)
+  for (let i = 0; i < animationFrames.length; i++) {
     //**The video-to-frames library requires DOM function to transfer imageData into 2D canvases
     // Create a canvas, define its width, height and ID. Append to div.
     let canvas = document.createElement('canvas');
@@ -105,22 +105,25 @@ function animate() {
   // Define the radius of the selectable
   let radius = distance / 2;
   // Define the steps
-  let treshold = radius / NUM_FRAMES;
+  let threshold = radius / NUM_FRAMES;
 
-  $('body').append(`<svg height="1000" width="1500"><line id="line" x1='${one.x}' y1='${one.y}' x2='${animation.x}' y2='${animation.y}' style="stroke:rgb(255,0,0);stroke-width:3"/></svg>`);
   // Get the distance between the mouse and the element
   let d;
   // Check the distance whenever the mouse is moved
   window.addEventListener('mousemove', (event) => {
     // Get the distance with the hypotenuse
     d = Math.hypot(event.clientX - one.x, event.clientY - one.y);
-    // Check the distance according to the tresholds
+    // Check the distance according to the thresholds
     for (let i = 0; i < NUM_FRAMES; i++) {
-      if (d < treshold * (i + 1)) {
-        console.log('visible' + i);
+      if (d < threshold * (i + 1)) {
+        // Hide all frames and display only the active one
+        $('.frames').css('visibility', 'hidden');
+        $(`#frame${NUM_FRAMES - 1 - i}`).css('visibility', 'visible');
+        // Break, so the loop work only for the smallest possible threshold
         break;
-      } else if (d > treshold * NUM_FRAMES) {
-        console.log('invisible');
+      } else if (d > threshold * NUM_FRAMES) {
+        // Display the first frame if no threshold
+        $('#frame0').css('visibility', 'visible');
       }
     }
   });
