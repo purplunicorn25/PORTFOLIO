@@ -13,12 +13,12 @@ The Home page of my Portfolio.
 // Constants
 let CHECK_INTERVAL = 1;
 let NUM_FRAMES = 15;
+let NUMBER_PAGES = 9;
 
 // When the document is loaded call setup
 $(document).ready(preload);
 
 // Variables
-// ANIMATION
 let animationFrames = [];
 let animationFramesLoaded = false;
 
@@ -58,11 +58,16 @@ function videoToFrames() {
 
 // setup
 //
-//
+// Display the images and numbers and animate everything
 function setup() {
-  console.log("setup");
+  // Display the result of the video-to-frame
   animationDisplay();
-  animate();
+  // Create the number elements
+  createNumbers();
+  // Animate for all the number elements
+  for (let i = 0; i < NUMBER_PAGES; i++) {
+    animate(`number${i}`);
+  }
 }
 
 // animationDisplay
@@ -93,17 +98,26 @@ function animationDisplay() {
   });
 }
 
+// createNumbers
+//
+// Create the numbers element to redirect pages
+function createNumbers() {
+  for (let i = 0; i < NUMBER_PAGES; i++) {
+    $('body').append(`<div class='number' id='number${i}' >${i + 1}</div>`);
+  }
+}
+
 // animate
 //
-//
-function animate() {
+// Display a frame according to its distance with an element
+function animate(id) {
   // Get the center of the element and the animation
-  let one = getCenter('one');
+  let number = getCenter(id);
   let animation = getCenter('animation');
   // Define the distance between the two centers
-  let distance = Math.hypot(animation.x - one.x, animation.y - one.y);
+  let distance = Math.hypot(animation.x - number.x, animation.y - number.y);
   // Define the radius of the selectable
-  let radius = distance / 2;
+  let radius = distance / 3;
   // Define the steps
   let threshold = radius / NUM_FRAMES;
 
@@ -112,7 +126,7 @@ function animate() {
   // Check the distance whenever the mouse is moved
   window.addEventListener('mousemove', (event) => {
     // Get the distance with the hypotenuse
-    d = Math.hypot(event.clientX - one.x, event.clientY - one.y);
+    d = Math.hypot(event.clientX - number.x, event.clientY - number.y);
     // Check the distance according to the thresholds
     for (let i = 0; i < NUM_FRAMES; i++) {
       if (d < threshold * (i + 1)) {
@@ -131,7 +145,7 @@ function animate() {
 
 // getCenter
 //
-//
+// Get the center coordinates of an element
 function getCenter(elementId) {
   let element = document.getElementById(elementId);
   let elementRect = element.getBoundingClientRect();

@@ -18,18 +18,59 @@ body {
   visibility: hidden;
 }
 
-#one {
-  left: 300px;
-  top: 50px;
-}
-
-#two {
-  right: 250px;
-  top: 200px;
-}
-
 .number {
   position: absolute;
   font-size: 60px;
   margin: 0px;
+  color: blue;
+  font-family: monospace;
+}
+
+.number:hover {
+  color: white;
+}
+
+#number0 {
+  left: 10%;
+  bottom: 16%;
+}
+
+#number1 {
+  left: 16%;
+  top: 40%;
+}
+
+#number2 {
+  left: 5%;
+  top: 10%;
+}
+
+#number3 {
+  left: 30%;
+  top: 18%;
+}
+
+#number4 {
+  left: 52%;
+  top: 5%;
+}
+
+#number5 {
+  right: 33%;
+  top: 25%;
+}
+
+#number6 {
+  right: 10%;
+  top: 13%;
+}
+
+#number7 {
+  right: 4%;
+  top: 50%;
+}
+
+#number8 {
+  right: 15%;
+  bottom: 10%;
 }
