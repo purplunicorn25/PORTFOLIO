@@ -1,13 +1,14 @@
 body {
-  background-color: lightgrey;
+  background-color: white;
   margin: 0px;
+  overflow: hidden;
 }
 
 #animation {
   display: block;
   position: absolute;
-  left: 20%;
-  bottom: 0;
+  left: 45%;
+  bottom: 18%;
   z-index: 0;
 }
 
@@ -19,58 +20,24 @@ body {
 }
 
 .number {
-  position: absolute;
+  font-family: 'Fjalla One', sans-serif;
   font-size: 60px;
   margin: 0px;
-  color: blue;
-  font-family: monospace;
+  color: #003366;
+  transition: all 1s;
+}
+
+.right {
+  position: absolute;
+  right: 25%;
+}
+
+.left {
+  position: absolute;
+  left: 25%;
 }
 
 .number:hover {
-  color: white;
-}
-
-#number0 {
-  left: 10%;
-  bottom: 16%;
-}
-
-#number1 {
-  left: 16%;
-  top: 40%;
-}
-
-#number2 {
-  left: 5%;
-  top: 10%;
-}
-
-#number3 {
-  left: 30%;
-  top: 18%;
-}
-
-#number4 {
-  left: 52%;
-  top: 5%;
-}
-
-#number5 {
-  right: 33%;
-  top: 25%;
-}
-
-#number6 {
-  right: 10%;
-  top: 13%;
-}
-
-#number7 {
-  right: 4%;
-  top: 50%;
-}
-
-#number8 {
-  right: 15%;
-  bottom: 10%;
+  transform: scale(2);
+  transition: all 500ms;
 }

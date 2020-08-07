@@ -12,8 +12,12 @@ The Home page of my Portfolio.
 
 // Constants
 let CHECK_INTERVAL = 1;
-let NUM_FRAMES = 15;
-let NUMBER_PAGES = 9;
+let NUM_FRAMES = 10;
+let NUMBER_PAGES = 10;
+let DISTANCE_PROPORTION = 3;
+
+// Arrays
+let romanDigits = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 
 // When the document is loaded call setup
 $(document).ready(preload);
@@ -35,6 +39,7 @@ function preload() {
       setup();
       // Clear the interval
       clearInterval(loading);
+      console.log("numbers");
     }
   }, CHECK_INTERVAL)
 }
@@ -102,8 +107,13 @@ function animationDisplay() {
 //
 // Create the numbers element to redirect pages
 function createNumbers() {
-  for (let i = 0; i < NUMBER_PAGES; i++) {
-    $('body').append(`<div class='number' id='number${i}' >${i + 1}</div>`);
+  for (let i = 0; i < NUMBER_PAGES / 2; i++) {
+    $('body').append(`<div class='number right' id='number${i}'>${romanDigits[i]}</div>`);
+    $(`#number${i}`).css('top', `${100 / (NUMBER_PAGES/ 2 + 2) * (i + 1)}%`);
+  }
+  for (let i = 0; i < NUMBER_PAGES / 2; i++) {
+    $('body').append(`<div class='number left' id='number${i + NUMBER_PAGES /2}'>${romanDigits[i + NUMBER_PAGES/2]}</div>`);
+    $(`#number${i + NUMBER_PAGES / 2}`).css('top', `${100 / (NUMBER_PAGES/ 2 + 2) * (i + 1)}%`);
   }
 }
 
@@ -117,7 +127,7 @@ function animate(id) {
   // Define the distance between the two centers
   let distance = Math.hypot(animation.x - number.x, animation.y - number.y);
   // Define the radius of the selectable
-  let radius = distance / 3;
+  let radius = distance / DISTANCE_PROPORTION;
   // Define the steps
   let threshold = radius / NUM_FRAMES;
 
@@ -134,10 +144,12 @@ function animate(id) {
         $('.frames').css('visibility', 'hidden');
         $(`#frame${NUM_FRAMES - 1 - i}`).css('visibility', 'visible');
         // Break, so the loop work only for the smallest possible threshold
+        console.log('inzone');
         break;
       } else if (d > threshold * NUM_FRAMES) {
         // Display the first frame if no threshold
         $('#frame0').css('visibility', 'visible');
+        console.log('out of zone');
       }
     }
   });
