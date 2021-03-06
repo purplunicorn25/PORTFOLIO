@@ -2,6 +2,7 @@ body {
   /* background-color: white; */
   margin: 0px;
   overflow: hidden;
+  background-color: white;
 }
 
 #canvas {
@@ -16,30 +17,30 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  /* visibility: hidden; */
+  visibility: hidden;
 }
 
 .number {
   font-family: 'Roboto Mono', monospace;
   font-style: bold;
-  font-size: 40px;
+  font-size: 100px;
   margin: 0px;
-  color: #003366;
+  color: #eae4cf;
   transition: all 1s;
 }
 
 .right {
   position: absolute;
-  left: 85%;
+  left: 80%;
 }
 
 .left {
   position: absolute;
-  right: 85%;
+  right: 80%;
 }
 
 .number:hover {
-  transform: scale(1.25);
+  transform: scale(1.05);
   transition: all 500ms;
-  color: magenta;
+  color: #ee3917;
 }

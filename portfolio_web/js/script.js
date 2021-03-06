@@ -14,13 +14,13 @@ The Home page of my Portfolio.
 let CHECK_INTERVAL = 1;
 let NUM_FRAMES = 20;
 let NUMBER_PAGES = 10;
-let DISTANCE_PROPORTION = 2;
+let DISTANCE_PROPORTION = 1.5;
 let FRAMES_WIDTH = 720;
 let FRAMES_LENGTH = 1200;
 let FRAMES_RATIO = FRAMES_WIDTH / FRAMES_LENGTH;
 
 // Arrays
-let romanDigits = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+let romanDigits = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
 
 // When the document is loaded call setup
 $(document).ready(preload);
@@ -53,7 +53,7 @@ function preload() {
 function framesLoad() {
   // Upload the frames from local file
   for (let i = 0; i < NUM_FRAMES; i++) {
-    let frame = (`<img class="frames" src="assets/images/video_frames/Alpha_Eclipse_0${i}.jpg">`);
+    let frame = (`<img class="frames" id='frame${i}' src="assets/images/video_frames/Alpha_Eclipse_0${i}.jpg">`);
     animationFrames.push(frame);
     // Since there is a delay, check when its loaded
     if (animationFrames.length === NUM_FRAMES) {
@@ -69,13 +69,14 @@ function setup() {
   // Set up the div for the images
   canvasSetup();
   // Display the frames as a pile
-  animationDisplay();
+  framesDisplay();
   // Create the number elements
   createNumbers();
   // Animate for all the number elements
   // for (let i = 0; i < NUMBER_PAGES; i++) {
   //   animate(`number${i}`);
   // }
+  animate('number0');
 }
 
 // canvasSetup
@@ -95,11 +96,11 @@ function canvasSetup() {
   $('#canvas').css('left', `${(($(window).width() - canvas.w) / 2)}px`);
 }
 
-// animationDisplay
+// framesDisplay
 //
 // Display the image from the animationFrames array from bottom to top
-function animationDisplay() {
-  for (let i = animationFrames.length; i > 0; i--) {
+function framesDisplay() {
+  for (let i = animationFrames.length; i > -1; i--) {
     $('#canvas').append(animationFrames[i]);
   }
 }
@@ -110,12 +111,52 @@ function animationDisplay() {
 function createNumbers() {
   for (let i = 0; i < NUMBER_PAGES / 2; i++) {
     $('body').append(`<div class='number right' id='number${i}'>${romanDigits[i]}</div>`);
-    $(`#number${i}`).css('top', `${100 / (NUMBER_PAGES/ 2 + 2) * (i + 1)}%`);
+    $(`#number${i}`).css('top', `${120 / (NUMBER_PAGES/ 2 + 2) * (i + .3)}%`);
   }
   for (let i = 0; i < NUMBER_PAGES / 2; i++) {
     $('body').append(`<div class='number left' id='number${i + NUMBER_PAGES /2}'>${romanDigits[i + NUMBER_PAGES/2]}</div>`);
-    $(`#number${i + NUMBER_PAGES / 2}`).css('top', `${100 / (NUMBER_PAGES/ 2 + 2) * (i + 1)}%`);
+    $(`#number${i + NUMBER_PAGES / 2}`).css('top', `${120 / (NUMBER_PAGES/ 2 + 2) * (i + .3)}%`);
   }
+}
+
+// animate
+//
+// Display a frame according to its distance with an element
+function animate(id) {
+  // Get the center of the element and the animation
+  let number = getCenter(id);
+  let animation = getCenter('canvas');
+  // Define the distance between the two centers
+  let distance = Math.hypot(animation.x - number.x, animation.y - number.y);
+  // Define the radius of the selectable
+  let radius = distance / DISTANCE_PROPORTION;
+  // Define the steps
+  let threshold = radius / NUM_FRAMES;
+
+  // Get the distance between the mouse and the element
+  let d;
+  console.log(number);
+  // Check the distance whenever the mouse is moved
+  window.addEventListener('mousemove', (event) => {
+    // Get the distance with the hypotenuse
+    d = Math.hypot(event.clientX - number.x, event.clientY - number.y);
+    // Check the distance according to the thresholds
+    for (let i = 0; i < NUM_FRAMES; i++) {
+      if (d < threshold * (i + 1)) {
+        // Hide all frames and display only the active one
+        $('.frames').css('visibility', 'hidden');
+        $(`#frame${NUM_FRAMES - 1 - i}`).css('visibility', 'visible');
+        // Break, so the loop work only for the smallest possible threshold
+        console.log('inzone');
+        break;
+      } else if (d > threshold * NUM_FRAMES) {
+        console.log(animationFrames);
+        // Display the first frame if no threshold
+        $('#frame0').css('visibility', 'visible');
+        console.log('out of zone');
+      }
+    }
+  });
 }
 
 // getCenter
