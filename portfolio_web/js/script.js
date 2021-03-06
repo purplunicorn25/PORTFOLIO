@@ -12,9 +12,9 @@ The Home page of my Portfolio.
 
 // Constants
 let CHECK_INTERVAL = 1;
-let NUM_FRAMES = 10;
+let NUM_FRAMES = 20;
 let NUMBER_PAGES = 10;
-let DISTANCE_PROPORTION = 3;
+let DISTANCE_PROPORTION = 2;
 
 // Arrays
 let romanDigits = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
@@ -24,14 +24,16 @@ $(document).ready(preload);
 
 // Variables
 let animationFrames = [];
+let canvas;
 let animationFramesLoaded = false;
 
 // preload
 //
 // Downlaod the images before calling setup
 function preload() {
-  // Transform video into frames
-  videoToFrames();
+  // Store frames in an Arrays
+  framesLoad();
+  console.log(animationFrames);
   // Check if they are loaded
   let loading = setInterval(() => {
     if (animationFramesLoaded === true) {
@@ -39,26 +41,23 @@ function preload() {
       setup();
       // Clear the interval
       clearInterval(loading);
-      console.log("numbers");
     }
   }, CHECK_INTERVAL)
 }
 
-// videoToFrames
+// framesLoad
 //
-// Convert a video file into an array of images (frames)
-function videoToFrames() {
-  // Define the source and the number of frames
-  VideoToFrames.getFrames('assets/images/TEST_FILM.mp4', NUM_FRAMES, VideoToFramesMethod.totalFrames).then(function(frames) {
-    // Store them in a global array
-    for (let i = 0; i < frames.length; i++) {
-      animationFrames.push(frames[i]);
-      // Since there is a delay with this library, check when its loaded
-      if (animationFrames.length === frames.length) {
-        animationFramesLoaded = true;
-      }
+// Preload the frames
+function framesLoad() {
+  // Upload the frames from local file
+  for (let i = 0; i < NUM_FRAMES; i++) {
+    let frame = (`assets/images/video_frames/Alpha_Eclipse_0${i}`);
+    animationFrames.push(frame);
+    // Since there is a delay with this library, check when its loaded
+    if (animationFrames.length === NUM_FRAMES) {
+      animationFramesLoaded = true;
     }
-  });
+  }
 }
 
 // setup
@@ -66,7 +65,7 @@ function videoToFrames() {
 // Display the images and numbers and animate everything
 function setup() {
   // Display the result of the video-to-frame
-  animationDisplay();
+  // animationDisplay();
   // Create the number elements
   createNumbers();
   // Animate for all the number elements
@@ -80,7 +79,11 @@ function setup() {
 // Display the image from the animationFrames array from bottom to top
 function animationDisplay() {
   // Define the width according to the first frame (same size for all)
-  let animationWidth = animationFrames[0].width;
+  // let animationWidth = animationFrames[0].width;
+  // let animationHeight = animationFrames[0].height;
+  // for (let i = 0; i < frames.length; i++) {
+  //   frames[i].height = 200;
+  let animationWidth = $(window).width();
   let animationHeight = animationFrames[0].height;
   // Create canvases to append the images to the animation div
   // for (let i = animationFrames.length - 1; i >= 0; i--)

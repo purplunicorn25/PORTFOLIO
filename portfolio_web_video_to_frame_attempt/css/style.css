@@ -1,0 +1,53 @@
+body {
+  background-color: white;
+  margin: 0px;
+  overflow: hidden;
+}
+
+#animation {
+  display: block;
+  position: absolute;
+  left: 38%;
+  top: 0;
+  z-index: 0;
+}
+
+/*  #background {
+  position: absolute;
+  top: 15%;
+  left: 28%;
+  width: 44%;
+  height: 33vw;
+  background-color: magenta;
+} */
+.frames {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+}
+
+.number {
+  font-family: 'Roboto Mono', monospace;
+  font-style: bold;
+  font-size: 40px;
+  margin: 0px;
+  color: #003366;
+  transition: all 1s;
+}
+
+.right {
+  position: absolute;
+  left: 85%;
+}
+
+.left {
+  position: absolute;
+  right: 85%;
+}
+
+.number:hover {
+  transform: scale(1.25);
+  transition: all 500ms;
+  color: magenta;
+}
