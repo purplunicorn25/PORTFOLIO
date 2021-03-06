@@ -30,6 +30,10 @@ let animationFrames = [];
 let canvas;
 let animationFramesLoaded = false;
 
+let numCenter = [];
+let dMeasures = [];
+let closest;
+
 // preload
 //
 // Downlaod the images before calling setup
@@ -73,10 +77,10 @@ function setup() {
   // Create the number elements
   createNumbers();
   // Animate for all the number elements
-  // for (let i = 0; i < NUMBER_PAGES; i++) {
-  //   animate(`number${i}`);
-  // }
-  animate('number0');
+  window.addEventListener('mousemove', (event) => {
+    distance();
+    console.log(closest);
+  });
 }
 
 // canvasSetup
@@ -109,20 +113,27 @@ function framesDisplay() {
 //
 // Create the numbers element to redirect pages
 function createNumbers() {
+  // Create the first half
   for (let i = 0; i < NUMBER_PAGES / 2; i++) {
     $('body').append(`<div class='number right' id='number${i}'>${romanDigits[i]}</div>`);
     $(`#number${i}`).css('top', `${120 / (NUMBER_PAGES/ 2 + 2) * (i + .3)}%`);
   }
+  // Create the second half
   for (let i = 0; i < NUMBER_PAGES / 2; i++) {
     $('body').append(`<div class='number left' id='number${i + NUMBER_PAGES /2}'>${romanDigits[i + NUMBER_PAGES/2]}</div>`);
     $(`#number${i + NUMBER_PAGES / 2}`).css('top', `${120 / (NUMBER_PAGES/ 2 + 2) * (i + .3)}%`);
+  }
+  // Store all their centers x and y in an array
+  for (let i = 0; i < NUMBER_PAGES; i++) {
+    let number = getCenter(`number${i}`);
+    numCenter.push(number);
   }
 }
 
 // animate
 //
 // Display a frame according to its distance with an element
-function animate(id) {
+function animate() {
   // Get the center of the element and the animation
   let number = getCenter(id);
   let animation = getCenter('canvas');
@@ -150,7 +161,6 @@ function animate(id) {
         console.log('inzone');
         break;
       } else if (d > threshold * NUM_FRAMES) {
-        console.log(animationFrames);
         // Display the first frame if no threshold
         $('#frame0').css('visibility', 'visible');
         console.log('out of zone');
@@ -158,6 +168,20 @@ function animate(id) {
     }
   });
 }
+
+//
+//
+//
+function distance() {
+  for (let i = 0; i < NUMBER_PAGES; i++) {
+    let d = Math.hypot(event.clientX - numCenter[i].x, event.clientY - numCenter[i].y);
+    dMeasures.push(d);
+  }
+  let smallestValue = Math.min.apply(Math, dMeasures);
+  closest = dMeasures.indexOf(smallestValue);
+  dMeasures = [];
+}
+
 
 // getCenter
 //
@@ -181,6 +205,6 @@ function getRect(elementId) {
   let elementRect = element.getBoundingClientRect();
   return {
     w: elementRect.width,
-    h: elementRect.height
+    h: elementRect.height,
   }
 }
