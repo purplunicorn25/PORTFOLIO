@@ -15,6 +15,9 @@ let CHECK_INTERVAL = 1;
 let NUM_FRAMES = 20;
 let NUMBER_PAGES = 10;
 let DISTANCE_PROPORTION = 2;
+let FRAMES_WIDTH = 720;
+let FRAMES_LENGTH = 1200;
+let FRAMES_RATIO = FRAMES_WIDTH / FRAMES_LENGTH;
 
 // Arrays
 let romanDigits = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
@@ -33,7 +36,6 @@ let animationFramesLoaded = false;
 function preload() {
   // Store frames in an Arrays
   framesLoad();
-  console.log(animationFrames);
   // Check if they are loaded
   let loading = setInterval(() => {
     if (animationFramesLoaded === true) {
@@ -51,9 +53,9 @@ function preload() {
 function framesLoad() {
   // Upload the frames from local file
   for (let i = 0; i < NUM_FRAMES; i++) {
-    let frame = (`assets/images/video_frames/Alpha_Eclipse_0${i}`);
+    let frame = (`<img class="frames" src="assets/images/video_frames/Alpha_Eclipse_0${i}.jpg">`);
     animationFrames.push(frame);
-    // Since there is a delay with this library, check when its loaded
+    // Since there is a delay, check when its loaded
     if (animationFrames.length === NUM_FRAMES) {
       animationFramesLoaded = true;
     }
@@ -64,46 +66,42 @@ function framesLoad() {
 //
 // Display the images and numbers and animate everything
 function setup() {
-  // Display the result of the video-to-frame
-  // animationDisplay();
+  // Set up the div for the images
+  canvasSetup();
+  // Display the frames as a pile
+  animationDisplay();
   // Create the number elements
   createNumbers();
   // Animate for all the number elements
-  for (let i = 0; i < NUMBER_PAGES; i++) {
-    animate(`number${i}`);
-  }
+  // for (let i = 0; i < NUMBER_PAGES; i++) {
+  //   animate(`number${i}`);
+  // }
+}
+
+// canvasSetup
+//
+// Create the canvas so it is ready to receive the images
+function canvasSetup() {
+  // Create a div that fills the windows height
+  $('body').append(`<div id='canvas'></div>`);
+  $('#canvas').css('height', '100%');
+  // Determine the width of the div according to the ratio of its content size
+  // Get the height
+  let canvas = getRect('canvas');
+  $('#canvas').css('width', `${canvas.h * FRAMES_RATIO}`);
+  // Place in the middle of the window
+  // Get the width
+  canvas = getRect('canvas');
+  $('#canvas').css('left', `${(($(window).width() - canvas.w) / 2)}px`);
 }
 
 // animationDisplay
 //
 // Display the image from the animationFrames array from bottom to top
 function animationDisplay() {
-  // Define the width according to the first frame (same size for all)
-  // let animationWidth = animationFrames[0].width;
-  // let animationHeight = animationFrames[0].height;
-  // for (let i = 0; i < frames.length; i++) {
-  //   frames[i].height = 200;
-  let animationWidth = $(window).width();
-  let animationHeight = animationFrames[0].height;
-  // Create canvases to append the images to the animation div
-  // for (let i = animationFrames.length - 1; i >= 0; i--)
-  for (let i = 0; i < animationFrames.length; i++) {
-    //**The video-to-frames library requires DOM function to transfer imageData into 2D canvases
-    // Create a canvas, define its width, height and ID. Append to div.
-    let canvas = document.createElement('canvas');
-    canvas.width = animationWidth;
-    canvas.height = animationHeight;
-    canvas.id = 'frame' + i;
-    canvas.getContext('2d').putImageData(animationFrames[i], 0, 0);
-    $('#animation').append(canvas);
-  };
-  // Add a class to the canvas elements
-  $('canvas').addClass('frames');
-  // Adjust the size of the animation div
-  $('#animation').css({
-    width: animationWidth,
-    height: animationHeight
-  });
+  for (let i = animationFrames.length; i > 0; i--) {
+    $('#canvas').append(animationFrames[i]);
+  }
 }
 
 // createNumbers
@@ -120,44 +118,6 @@ function createNumbers() {
   }
 }
 
-// animate
-//
-// Display a frame according to its distance with an element
-function animate(id) {
-  // Get the center of the element and the animation
-  let number = getCenter(id);
-  let animation = getCenter('animation');
-  // Define the distance between the two centers
-  let distance = Math.hypot(animation.x - number.x, animation.y - number.y);
-  // Define the radius of the selectable
-  let radius = distance / DISTANCE_PROPORTION;
-  // Define the steps
-  let threshold = radius / NUM_FRAMES;
-
-  // Get the distance between the mouse and the element
-  let d;
-  // Check the distance whenever the mouse is moved
-  window.addEventListener('mousemove', (event) => {
-    // Get the distance with the hypotenuse
-    d = Math.hypot(event.clientX - number.x, event.clientY - number.y);
-    // Check the distance according to the thresholds
-    for (let i = 0; i < NUM_FRAMES; i++) {
-      if (d < threshold * (i + 1)) {
-        // Hide all frames and display only the active one
-        $('.frames').css('visibility', 'hidden');
-        $(`#frame${NUM_FRAMES - 1 - i}`).css('visibility', 'visible');
-        // Break, so the loop work only for the smallest possible threshold
-        console.log('inzone');
-        break;
-      } else if (d > threshold * NUM_FRAMES) {
-        // Display the first frame if no threshold
-        $('#frame0').css('visibility', 'visible');
-        console.log('out of zone');
-      }
-    }
-  });
-}
-
 // getCenter
 //
 // Get the center coordinates of an element
@@ -169,5 +129,17 @@ function getCenter(elementId) {
   return {
     x: centerX,
     y: centerY
+  }
+}
+
+// getRect
+//
+// Get the width and height of an element
+function getRect(elementId) {
+  let element = document.getElementById(elementId);
+  let elementRect = element.getBoundingClientRect();
+  return {
+    w: elementRect.width,
+    h: elementRect.height
   }
 }
