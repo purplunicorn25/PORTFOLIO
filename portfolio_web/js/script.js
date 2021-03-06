@@ -31,7 +31,8 @@ let canvas;
 let animationFramesLoaded = false;
 
 let numCenter = [];
-let dMeasures = [];
+let hypotenus = [];
+let mouseHypo = [];
 let closest;
 
 // preload
@@ -79,7 +80,6 @@ function setup() {
   // Animate for all the number elements
   window.addEventListener('mousemove', (event) => {
     distance();
-    console.log(closest);
   });
 }
 
@@ -124,64 +124,57 @@ function createNumbers() {
     $(`#number${i + NUMBER_PAGES / 2}`).css('top', `${120 / (NUMBER_PAGES/ 2 + 2) * (i + .3)}%`);
   }
   // Store all their centers x and y in an array
+  // Measure the hypotenus between the center of each number and the frames
   for (let i = 0; i < NUMBER_PAGES; i++) {
+    // Center
     let number = getCenter(`number${i}`);
     numCenter.push(number);
+    // Hypotenus
+    let canvas = getCenter('canvas');
+    let hypo = Math.hypot(canvas.x - numCenter[i].x, canvas.y - numCenter[i].y);
+    hypotenus.push(hypo);
   }
+}
+
+// distance
+//
+// Measure the distance between the mouse and numbers at every movement, store in arrays
+function distance() {
+  // Store the live distance of each number with the mouse position in an array
+  for (let i = 0; i < NUMBER_PAGES; i++) {
+    let d = Math.hypot(event.clientX - numCenter[i].x, event.clientY - numCenter[i].y);
+    mouseHypo.push(d);
+  }
+  // Calculate the smallest value at every movement
+  let smallestValue = Math.min.apply(Math, mouseHypo);
+  closest = mouseHypo.indexOf(smallestValue);
+  animate();
+  // Empty every time the mouse moves again to get the updated value at the right index
+  mouseHypo = [];
 }
 
 // animate
 //
 // Display a frame according to its distance with an element
 function animate() {
-  // Get the center of the element and the animation
-  let number = getCenter(id);
-  let animation = getCenter('canvas');
-  // Define the distance between the two centers
-  let distance = Math.hypot(animation.x - number.x, animation.y - number.y);
-  // Define the radius of the selectable
-  let radius = distance / DISTANCE_PROPORTION;
+  // Define the radius of the closest number
+  let radius = hypotenus[closest] / DISTANCE_PROPORTION;
   // Define the steps
   let threshold = radius / NUM_FRAMES;
-
-  // Get the distance between the mouse and the element
-  let d;
-  console.log(number);
-  // Check the distance whenever the mouse is moved
-  window.addEventListener('mousemove', (event) => {
-    // Get the distance with the hypotenuse
-    d = Math.hypot(event.clientX - number.x, event.clientY - number.y);
-    // Check the distance according to the thresholds
-    for (let i = 0; i < NUM_FRAMES; i++) {
-      if (d < threshold * (i + 1)) {
-        // Hide all frames and display only the active one
-        $('.frames').css('visibility', 'hidden');
-        $(`#frame${NUM_FRAMES - 1 - i}`).css('visibility', 'visible');
-        // Break, so the loop work only for the smallest possible threshold
-        console.log('inzone');
-        break;
-      } else if (d > threshold * NUM_FRAMES) {
-        // Display the first frame if no threshold
-        $('#frame0').css('visibility', 'visible');
-        console.log('out of zone');
-      }
+  // Check the distance according to the thresholds
+  for (let i = 0; i < NUM_FRAMES; i++) {
+    if (mouseHypo[closest] < threshold * (i + 1)) {
+      // Hide all frames and display only the active one
+      $('.frames').css('visibility', 'hidden');
+      $(`#frame${NUM_FRAMES - 1 - i}`).css('visibility', 'visible');
+      // Break, so the loop work only for the smallest possible threshold
+      break;
+    } else if (mouseHypo[closest] > threshold * NUM_FRAMES) {
+      // Display the first frame if no threshold
+      $('#frame0').css('visibility', 'visible');
     }
-  });
-}
-
-//
-//
-//
-function distance() {
-  for (let i = 0; i < NUMBER_PAGES; i++) {
-    let d = Math.hypot(event.clientX - numCenter[i].x, event.clientY - numCenter[i].y);
-    dMeasures.push(d);
   }
-  let smallestValue = Math.min.apply(Math, dMeasures);
-  closest = dMeasures.indexOf(smallestValue);
-  dMeasures = [];
 }
-
 
 // getCenter
 //

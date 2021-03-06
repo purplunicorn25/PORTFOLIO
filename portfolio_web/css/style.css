@@ -25,7 +25,7 @@ body {
   font-style: bold;
   font-size: 100px;
   margin: 0px;
-  color: #eae4cf;
+  color: #dbb742;
   transition: all 1s;
 }
 
@@ -42,5 +42,5 @@ body {
 .number:hover {
   transform: scale(1.05);
   transition: all 500ms;
-  color: #ee3917;
+  color: #d2e000;
 }
