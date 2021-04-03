@@ -21,6 +21,8 @@ let FRAMES_RATIO = FRAMES_WIDTH / FRAMES_LENGTH;
 
 // Arrays
 let romanDigits = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+let mountainLeftColors = ['#9c2a12', '#9c2a12', '#94291f', '#8b2733', '#852540', '#7e234c', '#7f2354', '#7a2358', '#76225e', '#742262', '#712166', '#71206c', '#6f2071', '#6e2171', '#6a1f72', '#6a2079', '#6a2079', '#6a2079', '#691f7e', '#662080', '#662083'];
+let mountainRightColors = ['#450a06', '#440a19', '#410a27', '#420a2f', '#420936', '#3e0a3b', '#400a44', '#3e0a48', '#3e0a48', '#3e0a4c', '#3d0951', '#3e0b56', '#3d095b', '#3d095b', '#3e0a5d', '#3b0a63', '#3b0a66', '#3b0a63', '#3c0a6d', '#3a0a70', '#3a0a78'];
 
 // When the document is loaded call setup
 $(document).ready(preload);
@@ -35,6 +37,7 @@ let hypotenus = [];
 let mouseHypo = [];
 let closest;
 let threshold;
+let currentFrame;
 
 // preload
 //
@@ -115,16 +118,26 @@ function pageTitle() {
   $('body').append("<h1 id='portfolio'>PORTFOLIO</h1>");
   let portfolioRect = getRect('portfolio');
   $('#portfolio').css({
-    'left': `${canvasRect.r - 5}px`,
-    'bottom': `-${portfolioRect.h / 4.5}px`
+    'left': `${canvasRect.r - 4.5}px`,
+    'bottom': `-${portfolioRect.h / 4.5}px`,
+    'color': `${mountainRightColors[0]}`
   });
   // name
   $('body').append("<h1 id='name'>A.BOUTET</h1>");
   let nameRect = getRect('name');
   $('#name').css({
-    'left': `${canvasRect.l - nameRect.w}px`,
-    'bottom': `-${nameRect.h / 4}px`
+    'left': `${canvasRect.l - nameRect.w + 1.5}px`,
+    'bottom': `-${nameRect.h /4.5}px`,
+    'color': `${mountainLeftColors[0]}`
   });
+}
+
+// titleColor
+//
+// Change the color of the title based on the current frame
+function titleColor(activeFrame) {
+  $('#name').css('color', `${mountainLeftColors[activeFrame]}`);
+  $('#portfolio').css('color', `${mountainRightColors[activeFrame]}`);
 }
 
 // framesDisplay
@@ -197,6 +210,9 @@ function animate() {
       // Hide all frames and display only the active one
       $('.frames').css('visibility', 'hidden');
       $(`#frame${NUM_FRAMES - 1 - i}`).css('visibility', 'visible');
+      // Change the color of the title based on the current frame (i)
+      currentFrame = NUM_FRAMES - i;
+      titleColor(currentFrame);
       // Break, so the loop work only for the smallest possible threshold
       break;
     } else if (mouseHypo[closest] > threshold * NUM_FRAMES) {

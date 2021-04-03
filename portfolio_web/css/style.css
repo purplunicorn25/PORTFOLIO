@@ -27,13 +27,15 @@ body {
   margin: 0px;
   color: #dbb742;
   transition: all 1s;
+  user-select: none;
 }
 
 h1 {
   position: absolute;
   font-family: 'Roboto Mono', monospace;
-  font-size: 330%;
+  font-size: 250%;
   margin: 0px;
+  user-select: none;
 }
 
 .right {
