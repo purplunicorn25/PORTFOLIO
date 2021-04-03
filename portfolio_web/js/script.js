@@ -14,7 +14,7 @@ The Home page of my Portfolio.
 let CHECK_INTERVAL = 1;
 let NUM_FRAMES = 20;
 let NUMBER_PAGES = 10;
-let DISTANCE_PROPORTION = 1.5;
+let DISTANCE_PROPORTION = 2;
 let FRAMES_WIDTH = 720;
 let FRAMES_LENGTH = 1200;
 let FRAMES_RATIO = FRAMES_WIDTH / FRAMES_LENGTH;
@@ -34,6 +34,7 @@ let numCenter = [];
 let hypotenus = [];
 let mouseHypo = [];
 let closest;
+let threshold;
 
 // preload
 //
@@ -98,6 +99,32 @@ function canvasSetup() {
   // Get the width
   canvas = getRect('canvas');
   $('#canvas').css('left', `${(($(window).width() - canvas.w) / 2)}px`);
+
+  // Display the page's title once the canvas is made
+  pageTitle();
+}
+
+//
+//
+//
+function pageTitle() {
+  // get the location of the canvas
+  let canvasRect = getRect('canvas');
+  // create the titles and place beside canvas
+  // portfolio
+  $('body').append("<h1 id='portfolio'>PORTFOLIO</h1>");
+  let portfolioRect = getRect('portfolio');
+  $('#portfolio').css({
+    'left': `${canvasRect.r - 5}px`,
+    'bottom': `-${portfolioRect.h / 4.5}px`
+  });
+  // name
+  $('body').append("<h1 id='name'>A.BOUTET</h1>");
+  let nameRect = getRect('name');
+  $('#name').css({
+    'left': `${canvasRect.l - nameRect.w}px`,
+    'bottom': `-${nameRect.h / 4}px`
+  });
 }
 
 // framesDisplay
@@ -107,6 +134,7 @@ function framesDisplay() {
   for (let i = animationFrames.length; i > -1; i--) {
     $('#canvas').append(animationFrames[i]);
   }
+  $('#frame0').css('visibility', 'visible');
 }
 
 // createNumbers
@@ -145,10 +173,12 @@ function distance() {
     let d = Math.hypot(event.clientX - numCenter[i].x, event.clientY - numCenter[i].y);
     mouseHypo.push(d);
   }
-  // Calculate the smallest value at every movement
+  // Calculate the smallest value at every movement and display the according frame
   let smallestValue = Math.min.apply(Math, mouseHypo);
   closest = mouseHypo.indexOf(smallestValue);
   animate();
+  // Change the background accordingly too
+  numHover();
   // Empty every time the mouse moves again to get the updated value at the right index
   mouseHypo = [];
 }
@@ -160,7 +190,7 @@ function animate() {
   // Define the radius of the closest number
   let radius = hypotenus[closest] / DISTANCE_PROPORTION;
   // Define the steps
-  let threshold = radius / NUM_FRAMES;
+  threshold = radius / NUM_FRAMES;
   // Check the distance according to the thresholds
   for (let i = 0; i < NUM_FRAMES; i++) {
     if (mouseHypo[closest] < threshold * (i + 1)) {
@@ -174,6 +204,29 @@ function animate() {
       $('#frame0').css('visibility', 'visible');
     }
   }
+}
+
+// numHover
+//
+//
+function numHover() {
+  $('.number').on('mouseenter', () => {
+    $('body').css('backgroundColor', 'black');
+    $('.number').css('color', 'black');
+    $(event.currentTarget).css('color', '#d2e000');
+    // displayTitle(event.currentTarget);
+  });
+  $('.number').on('mouseleave', () => {
+    $('body').css('backgroundColor', 'white');
+    $('.number').css('color', '#dbb742');
+  });
+}
+
+//
+//
+//
+function displayTitle(active) {
+
 }
 
 // getCenter
@@ -196,8 +249,11 @@ function getCenter(elementId) {
 function getRect(elementId) {
   let element = document.getElementById(elementId);
   let elementRect = element.getBoundingClientRect();
+  // console.log(elementRect);
   return {
     w: elementRect.width,
     h: elementRect.height,
+    l: elementRect.left,
+    r: elementRect.right
   }
 }
