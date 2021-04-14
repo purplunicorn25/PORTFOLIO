@@ -8,6 +8,10 @@ Anne Boutet
 
 The Home page of my Portfolio.
 
+This program tracks the mouse movement and animates a serie of images as
+a frame-by-frame video. The images represent an eclipse and the titles
+of the projects are displayed on hover, meaning and the eclipse is total.
+
 *********************************************************************/
 
 // Constants
@@ -28,9 +32,12 @@ let mountainRightColors = ['#450a06', '#440a19', '#410a27', '#420a2f', '#420936'
 $(document).ready(preload);
 
 // Variables
-let animationFrames = [];
-let canvas;
+let projects = [];
+let jsonLoaded = false;
 let animationFramesLoaded = false;
+
+let canvas;
+let animationFrames = [];
 
 let numCenter = [];
 let hypotenus = [];
@@ -41,19 +48,38 @@ let currentFrame;
 
 // preload
 //
-// Downlaod the images before calling setup
+// DGet JSON; Download the images before calling setup
 function preload() {
+  loadJSON();
   // Store frames in an Arrays
   framesLoad();
   // Check if they are loaded
   let loading = setInterval(() => {
-    if (animationFramesLoaded === true) {
+    if (animationFramesLoaded === true && jsonLoaded === true) {
       // Call setup
       setup();
       // Clear the interval
       clearInterval(loading);
     }
   }, CHECK_INTERVAL)
+}
+
+// loadJSON
+//
+// Get data from JSON file, show error if fail, store data in global array if done
+function loadJSON() {
+  // Get the data from the JSON file
+  $.getJSON("data/projects_data.json")
+    .fail((request, textStatus, error) => {
+      // Display the error in the console
+      console.error(error);
+    })
+    .done((data) => {
+      // Store the projects in an array
+      projects = data.projects;
+      // update boolean
+      jsonLoaded = true;
+    });
 }
 
 // framesLoad
@@ -107,9 +133,9 @@ function canvasSetup() {
   pageTitle();
 }
 
+// pageTitle
 //
-//
-//
+// Append titles and change their colors according to the bottom mountains
 function pageTitle() {
   // get the location of the canvas
   let canvasRect = getRect('canvas');
@@ -118,7 +144,7 @@ function pageTitle() {
   $('body').append("<h1 id='portfolio'>PORTFOLIO</h1>");
   let portfolioRect = getRect('portfolio');
   $('#portfolio').css({
-    'left': `${canvasRect.r - 4.5}px`,
+    'left': `${canvasRect.r - 3.5}px`,
     'bottom': `-${portfolioRect.h / 4.5}px`,
     'color': `${mountainRightColors[0]}`
   });
@@ -126,28 +152,10 @@ function pageTitle() {
   $('body').append("<h1 id='name'>A.BOUTET</h1>");
   let nameRect = getRect('name');
   $('#name').css({
-    'left': `${canvasRect.l - nameRect.w + 1.5}px`,
+    'left': `${canvasRect.l - nameRect.w}px`,
     'bottom': `-${nameRect.h /4.5}px`,
     'color': `${mountainLeftColors[0]}`
   });
-}
-
-// titleColor
-//
-// Change the color of the title based on the current frame
-function titleColor(activeFrame) {
-  $('#name').css('color', `${mountainLeftColors[activeFrame]}`);
-  $('#portfolio').css('color', `${mountainRightColors[activeFrame]}`);
-}
-
-// framesDisplay
-//
-// Display the image from the animationFrames array from bottom to top
-function framesDisplay() {
-  for (let i = animationFrames.length; i > -1; i--) {
-    $('#canvas').append(animationFrames[i]);
-  }
-  $('#frame0').css('visibility', 'visible');
 }
 
 // createNumbers
@@ -174,6 +182,85 @@ function createNumbers() {
     let canvas = getCenter('canvas');
     let hypo = Math.hypot(canvas.x - numCenter[i].x, canvas.y - numCenter[i].y);
     hypotenus.push(hypo);
+  }
+  // Append the project title according to the numbersRect
+  createProjects();
+}
+
+// createProjects
+//
+// Append the titles of the projects according to the numbers rect
+function createProjects() {
+  let indent = 10;
+  // for numbers on the right
+  for (let i = 0; i < NUMBER_PAGES / 2; i++) {
+    let numberRect = getRect(`number${i}`);
+    let numberCenter = getCenter(`number${i}`);
+    // console.log(numberRect.r);
+    $('body').append(`<h2 id='project${i}'><span class='type'>${projects[i].type}</span><br>${projects[i].name}</h2>`);
+    let projectNameRect = getRect(`project${i}`);
+    $(`#project${i}`).css({
+      'left': `${numberRect.r + indent}px`,
+      'top': `${numberCenter.y - (projectNameRect.h /2)}px`,
+      'color': 'blue'
+    });
+  }
+  // for numbers on the left
+  for (let i = NUMBER_PAGES / 2; i < NUMBER_PAGES; i++) {
+    let numberRect = getRect(`number${i}`);
+    let numberCenter = getCenter(`number${i}`);
+    $('body').append(`<h2 id='project${i}'><span class='type'>${projects[i].type}</span><br>${projects[i].name}</h2>`);
+    let projectNameRect = getRect(`project${i}`);
+    console.log(numberRect.r + indent);
+    $(`#project${i}`).css({
+      'left': `${numberRect.l - projectNameRect.w - (indent * 2)}px`,
+      'top': `${numberCenter.y - (projectNameRect.h /2)}px`,
+      'color': 'blue',
+      'text-align': 'right'
+    });
+  }
+}
+
+//
+//
+//
+function displayProject(active) {
+
+}
+
+// framesDisplay
+//
+// Display the image from the animationFrames array from bottom to top
+function framesDisplay() {
+  for (let i = animationFrames.length; i > -1; i--) {
+    $('#canvas').append(animationFrames[i]);
+  }
+  $('#frame0').css('visibility', 'visible');
+}
+
+// titleColor
+//
+// Change the color of the title based on the current frame
+function titleColor(activeFrame) {
+  $('#name').css('color', `${mountainLeftColors[activeFrame]}`);
+  $('#portfolio').css('color', `${mountainRightColors[activeFrame]}`);
+}
+
+// titleFade
+//
+// Deal with the class change for fadeIn
+function titleFade(z) {
+  if (z === 'In') {
+    $('#name').removeClass('m-fadeOut');
+    $('#portfolio').removeClass('m-fadeOut');
+    $('#name').addClass('m-fadeIn');
+    $('#portfolio').addClass('m-fadeIn');
+  }
+  if (z === 'Out') {
+    $('#name').removeClass('m-fadeIn');
+    $('#portfolio').removeClass('m-fadeIn');
+    $('#name').addClass('m-fadeOut');
+    $('#portfolio').addClass('m-fadeOut');
   }
 }
 
@@ -224,25 +311,25 @@ function animate() {
 
 // numHover
 //
-//
+// Deal with interaction of mouse with numbers to update colors and visibility of elements
 function numHover() {
   $('.number').on('mouseenter', () => {
+    // Turn all the background and numbers black (use colors not visibility cuz hover on others still ok)
     $('body').css('backgroundColor', 'black');
     $('.number').css('color', 'black');
+    // Keep the overed element visible and display its related title
     $(event.currentTarget).css('color', '#d2e000');
     // displayTitle(event.currentTarget);
+    // Hide the titles
+    titleFade('Out');
   });
   $('.number').on('mouseleave', () => {
+    // Restaure the original color
     $('body').css('backgroundColor', 'white');
     $('.number').css('color', '#dbb742');
+    // Show the titles
+    titleFade('In');
   });
-}
-
-//
-//
-//
-function displayTitle(active) {
-
 }
 
 // getCenter
@@ -270,6 +357,8 @@ function getRect(elementId) {
     w: elementRect.width,
     h: elementRect.height,
     l: elementRect.left,
-    r: elementRect.right
+    r: elementRect.right,
+    b: elementRect.bottom,
+    t: elementRect.top
   }
 }

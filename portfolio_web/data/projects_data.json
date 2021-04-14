@@ -1,0 +1,56 @@
+{
+  "description": "Anne Boutet Portfolio",
+  "projects": [{
+      "number": 0,
+      "type": "Fashion Design",
+      "name": "Sonnez le glas;<br>le temps ne meurt pas"
+    },
+    {
+      "number": 1,
+      "type": "Smart Clothing",
+      "name": "FashionTech"
+    },
+    {
+      "number": 2,
+      "type": "Game",
+      "name": "Computational Wizards"
+    },
+    {
+      "number": 3,
+      "type": "Speculative Design",
+      "name": "#CaptionMe"
+    },
+    {
+      "number": 4,
+      "type": "Typography",
+      "name": "YOU && I"
+    },
+    {
+      "number": 5,
+      "type": "Time Based Media",
+      "name": "Speed is an Euphemism"
+
+    },
+    {
+      "number": 6,
+      "type": "3D",
+      "name": "Characters"
+
+    },
+    {
+      "number": 7,
+      "type": "3D",
+      "name": "Experimental"
+    },
+    {
+      "number": 8,
+      "type": "Time Based Media",
+      "name": "Martial Arts"
+    },
+    {
+      "number": 9,
+      "type": "About & Contact",
+      "name": ""
+    }
+  ]
+}

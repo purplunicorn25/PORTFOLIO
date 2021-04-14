@@ -38,17 +38,41 @@ h1 {
   user-select: none;
 }
 
+h2 {
+  position: absolute;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 150%;
+  margin: 0px;
+  user-select: none;
+}
+
+.type {
+  color: purple;
+}
+
 .right {
   position: absolute;
-  left: 80%;
+  left: 70%;
 }
 
 .left {
   position: absolute;
-  right: 80%;
+  right: 70%;
 }
 
 .number:hover {
   transform: scale(1.05);
   transition: all 2s;
+}
+
+.m-fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 500ms, opacity 500ms;
+}
+
+.m-fadeIn {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 0s, opacity 500ms;
 }
