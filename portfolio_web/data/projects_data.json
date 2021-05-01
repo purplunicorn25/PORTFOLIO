@@ -13,7 +13,7 @@
     {
       "number": 2,
       "type": "Game",
-      "name": "Computational Wizards"
+      "name": "Computational<br>Wizards"
     },
     {
       "number": 3,
@@ -49,8 +49,8 @@
     },
     {
       "number": 9,
-      "type": "About & Contact",
-      "name": ""
+      "type": "",
+      "name": "About & Contact"
     }
   ]
 }

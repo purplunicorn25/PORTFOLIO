@@ -28,8 +28,6 @@ let romanDigits = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 
 let mountainLeftColors = ['#9c2a12', '#9c2a12', '#94291f', '#8b2733', '#852540', '#7e234c', '#7f2354', '#7a2358', '#76225e', '#742262', '#712166', '#71206c', '#6f2071', '#6e2171', '#6a1f72', '#6a2079', '#6a2079', '#6a2079', '#691f7e', '#662080', '#662083'];
 let mountainRightColors = ['#450a06', '#440a19', '#410a27', '#420a2f', '#420936', '#3e0a3b', '#400a44', '#3e0a48', '#3e0a48', '#3e0a4c', '#3d0951', '#3e0b56', '#3d095b', '#3d095b', '#3e0a5d', '#3b0a63', '#3b0a66', '#3b0a63', '#3c0a6d', '#3a0a70', '#3a0a78'];
 
-// When the document is loaded call setup
-$(document).ready(preload);
 
 // Variables
 let projects = [];
@@ -45,6 +43,11 @@ let mouseHypo = [];
 let closest;
 let threshold;
 let currentFrame;
+
+let hoverColor = '#d2e000';
+
+// When the document is loaded call setup
+$(document).ready(preload);
 
 // preload
 //
@@ -144,7 +147,7 @@ function pageTitle() {
   $('body').append("<h1 id='portfolio'>PORTFOLIO</h1>");
   let portfolioRect = getRect('portfolio');
   $('#portfolio').css({
-    'left': `${canvasRect.r - 3.5}px`,
+    'left': `${canvasRect.r - 4}px`,
     'bottom': `-${portfolioRect.h / 4.5}px`,
     'color': `${mountainRightColors[0]}`
   });
@@ -152,8 +155,8 @@ function pageTitle() {
   $('body').append("<h1 id='name'>A.BOUTET</h1>");
   let nameRect = getRect('name');
   $('#name').css({
-    'left': `${canvasRect.l - nameRect.w}px`,
-    'bottom': `-${nameRect.h /4.5}px`,
+    'left': `${canvasRect.l - nameRect.w + 2}px`,
+    'bottom': `-${nameRect.h / 4.5}px`,
     'color': `${mountainLeftColors[0]}`
   });
 }
@@ -202,7 +205,7 @@ function createProjects() {
     $(`#project${i}`).css({
       'left': `${numberRect.r + indent}px`,
       'top': `${numberCenter.y - (projectNameRect.h /2)}px`,
-      'color': 'blue'
+      'color': hoverColor
     });
   }
   // for numbers on the left
@@ -211,21 +214,13 @@ function createProjects() {
     let numberCenter = getCenter(`number${i}`);
     $('body').append(`<h2 id='project${i}'><span class='type'>${projects[i].type}</span><br>${projects[i].name}</h2>`);
     let projectNameRect = getRect(`project${i}`);
-    console.log(numberRect.r + indent);
     $(`#project${i}`).css({
       'left': `${numberRect.l - projectNameRect.w - (indent * 2)}px`,
       'top': `${numberCenter.y - (projectNameRect.h /2)}px`,
-      'color': 'blue',
-      'text-align': 'right'
+      'text-align': 'right',
+      'color': hoverColor
     });
   }
-}
-
-//
-//
-//
-function displayProject(active) {
-
 }
 
 // framesDisplay
@@ -244,24 +239,6 @@ function framesDisplay() {
 function titleColor(activeFrame) {
   $('#name').css('color', `${mountainLeftColors[activeFrame]}`);
   $('#portfolio').css('color', `${mountainRightColors[activeFrame]}`);
-}
-
-// titleFade
-//
-// Deal with the class change for fadeIn
-function titleFade(z) {
-  if (z === 'In') {
-    $('#name').removeClass('m-fadeOut');
-    $('#portfolio').removeClass('m-fadeOut');
-    $('#name').addClass('m-fadeIn');
-    $('#portfolio').addClass('m-fadeIn');
-  }
-  if (z === 'Out') {
-    $('#name').removeClass('m-fadeIn');
-    $('#portfolio').removeClass('m-fadeIn');
-    $('#name').addClass('m-fadeOut');
-    $('#portfolio').addClass('m-fadeOut');
-  }
 }
 
 // distance
@@ -318,18 +295,45 @@ function numHover() {
     $('body').css('backgroundColor', 'black');
     $('.number').css('color', 'black');
     // Keep the overed element visible and display its related title
-    $(event.currentTarget).css('color', '#d2e000');
-    // displayTitle(event.currentTarget);
+    $(event.currentTarget).css({
+      'color': 'black',
+      'text-shadow': `3px -3px ${hoverColor}`
+    });
     // Hide the titles
-    titleFade('Out');
+    fade('#name', 'Out');
+    fade('#portfolio', 'Out');
+    // Show the projects
+    let lastChar = event.currentTarget.id.slice(-1);
+    fade(`#project${lastChar}`, 'In');
   });
   $('.number').on('mouseleave', () => {
     // Restaure the original color
     $('body').css('backgroundColor', 'white');
-    $('.number').css('color', '#dbb742');
+    $('.number').css({
+      'color': '#dbb742',
+      'text-shadow': ''
+    });
     // Show the titles
-    titleFade('In');
+    fade('#name', 'In');
+    fade('#portfolio', 'In');
+    // Hide the projects
+    let lastChar = event.currentTarget.id.slice(-1);
+    fade(`#project${lastChar}`, 'Out');
   });
+}
+
+// fade
+//
+// Deal with the class change for fadeIn and fadeOut
+function fade(id, z) {
+  if (z === 'In') {
+    $(id).removeClass('m-fadeOut');
+    $(id).addClass('m-fadeIn');
+  }
+  if (z === 'Out') {
+    $(id).removeClass('m-fadeIn');
+    $(id).addClass('m-fadeOut');
+  }
 }
 
 // getCenter

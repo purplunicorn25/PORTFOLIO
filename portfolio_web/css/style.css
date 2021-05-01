@@ -26,7 +26,7 @@ body {
   font-size: 650%;
   margin: 0px;
   color: #dbb742;
-  transition: all 1s;
+  transition: all 500ms;
   user-select: none;
 }
 
@@ -41,13 +41,18 @@ h1 {
 h2 {
   position: absolute;
   font-family: 'Roboto Mono', monospace;
-  font-size: 150%;
+  font-size: 130%;
   margin: 0px;
+  user-select: none;
+  visibility: hidden;
   user-select: none;
 }
 
 .type {
-  color: purple;
+  /* color: #d2e000; */
+  color: #e9fb61;
+  font-size: 115%;
+  /* text-shadow: 2px -2px #d2e000; */
 }
 
 .right {
@@ -61,8 +66,8 @@ h2 {
 }
 
 .number:hover {
-  transform: scale(1.05);
-  transition: all 2s;
+  /* transform: scale(1.05); */
+  /* transition: all 1s; */
 }
 
 .m-fadeOut {
@@ -74,5 +79,5 @@ h2 {
 .m-fadeIn {
   visibility: visible;
   opacity: 1;
-  transition: visibility 0s linear 0s, opacity 500ms;
+  transition: visibility 2s linear 0s, opacity 500ms;
 }
