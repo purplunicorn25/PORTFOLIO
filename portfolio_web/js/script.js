@@ -167,12 +167,12 @@ function pageTitle() {
 function createNumbers() {
   // Create the first half
   for (let i = 0; i < NUMBER_PAGES / 2; i++) {
-    $('body').append(`<div class='number right' id='number${i}'>${romanDigits[i]}</div>`);
+    $('body').append(`<a href='project/${romanDigits[i]}'><div class='number right' id='number${i}'>${romanDigits[i]}</div></a>`);
     $(`#number${i}`).css('top', `${120 / (NUMBER_PAGES/ 2 + 2) * (i + .3)}%`);
   }
   // Create the second half
   for (let i = 0; i < NUMBER_PAGES / 2; i++) {
-    $('body').append(`<div class='number left' id='number${i + NUMBER_PAGES /2}'>${romanDigits[i + NUMBER_PAGES/2]}</div>`);
+    $('body').append(`<a href='project/${romanDigits[i]}'><div class='number left' id='number${i + NUMBER_PAGES /2}'>${romanDigits[i + NUMBER_PAGES/2]}</div></a>`);
     $(`#number${i + NUMBER_PAGES / 2}`).css('top', `${120 / (NUMBER_PAGES/ 2 + 2) * (i + .3)}%`);
   }
   // Store all their centers x and y in an array
